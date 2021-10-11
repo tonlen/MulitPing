@@ -1,26 +1,26 @@
+#import "ICMPMulitPing.h"
+
 #import <arpa/inet.h>
 #import <netdb.h>
 #import <netinet/in.h>
 #import <sys/socket.h>
 #import <unistd.h>
-
 #import <netinet/in.h>
 #import <netinet/tcp.h>
 
 #include <AssertMacros.h>
-#import "ICMPMulitPing.h"
+const int kInvalidResponse = -22001;
+const int kRequestStoped = -2;
 
-const int kICMPInvalidPingResponse = -22001;
-const int kICMPRequestStoped = -2;
 
-@interface ICMPPingModel()
+@interface PingModel()
 @property (copy) NSDate *startDate;
 @property (copy) NSDate *endDate;
 @property (copy) NSString *ip;
 @property (assign) NSTimeInterval delay;
 @end
 
-@implementation ICMPPingModel
+@implementation PingModel
 - (instancetype)initWithIP:(NSString *)ip startDate:(NSDate *)date
 {
     self = [super init];
@@ -32,25 +32,25 @@ const int kICMPRequestStoped = -2;
     return self;
 }
 - (NSString *)description {
-    return [NSString stringWithFormat:@"%@: time=%.3f ms", _ip, _delay];
+    return [NSString stringWithFormat:@"%@ delay=%.3f ms", _ip, _delay];
 }
 - (void)caculator {
     _delay = [_endDate timeIntervalSinceDate:_startDate] * 1000;
 }
 @end
 
-@interface ICMPPingResult()
+@interface PingResult()
 - (instancetype)init:(NSInteger)code
                   ip:(NSString *)ip
                  delay:(NSTimeInterval)delay;
 @end
 
-@implementation ICMPPingResult
+@implementation PingResult
 - (NSString *)description {
-    if (_code == 0 || _code == kICMPRequestStoped) {
-        return [NSString stringWithFormat:@"%@: time=%.3f ms", _ip, _delay];
+    if (_code == 0 || _code == kRequestStoped) {
+        return [NSString stringWithFormat:@"%@ delay=%.3f ms", _ip, _delay];
     }
-    return [NSString stringWithFormat:@"%@: ping failed %ld",_ip, (long)_code];
+    return [NSString stringWithFormat:@"%@ ping failed %ld",_ip, (long)_code];
 }
 
 - (instancetype)init:(NSInteger)code
@@ -225,10 +225,8 @@ static BOOL isValid(char *buffer, int len) {
            icmpPtr->code == 0;
 }
 
-
 @interface ICMPMulitPing()
-@property (nonatomic, weak) id<ICMPOutputDelegate> output;
-@property (nonatomic, copy) ICMPPingCompleteHandler complete;
+@property (nonatomic, copy) PingCompleteHandler complete;
 @property (nonatomic) dispatch_queue_t send_que;
 @property (nonatomic) dispatch_queue_t recv_que;
 
@@ -241,6 +239,7 @@ static BOOL isValid(char *buffer, int len) {
 @property (nonatomic, strong) NSMutableDictionary *results;
 @property (nonatomic, copy) NSLock *lock;
 @end
+
 
 @implementation ICMPMulitPing
 
@@ -283,7 +282,7 @@ static BOOL isValid(char *buffer, int len) {
             return 0;
         }
         addr.sin_addr = *(struct in_addr *)host->h_addr;
-        [self.output write:[NSString stringWithFormat:@"ping to ip %s ...\n", inet_ntoa(addr.sin_addr)]];
+        // [NSString stringWithFormat:@"ping to ip %s ...\n", inet_ntoa(addr.sin_addr)]
     }
     uint16_t identifier = (uint16_t)arc4random();
     return [self sendPacket:&addr seq:_currentCount identifier:identifier];
@@ -327,18 +326,14 @@ static BOOL isValid(char *buffer, int len) {
             NSString *host = [[NSString alloc] initWithUTF8String:hoststr];
             
             ICMPICMPPacket *icmpPtr = (ICMPICMPPacket *)ICMP_icmpInPacket(buffer, len);
-            //        int identifier = OSSwapBigToHostInt16(icmpPtr->identifier);
             int seq = OSSwapBigToHostInt16(icmpPtr->sequenceNumber);
-            
-            //        NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:_t1];
-            //        ICMPPingResult *result = [[ICMPPingResult alloc] init:err ip:host delay:duration];
             NSString *key = [NSString stringWithFormat:@"%@", @(seq)];
-            ICMPPingModel *result = self.results[host][key];
+            PingModel *result = self.results[host][key];
             if (result) {
                 result.endDate = [NSDate date];
             }
         }else {
-            err = kICMPInvalidPingResponse;
+            err = kInvalidResponse;
         }
     }
     free(buffer);
@@ -351,16 +346,16 @@ static BOOL isValid(char *buffer, int len) {
     for (NSString *ip in self.results.allKeys) {
         NSDictionary *delays = self.results[ip];
         NSTimeInterval sum = 0;
-        for (ICMPPingModel *result in delays.allValues) {
+        for (PingModel *result in delays.allValues) {
             [result caculator];
             sum += result.delay;
         }
         NSTimeInterval avg = sum / delays.count;
-        ICMPPingResult *result;
-        if (avg > 0 && avg < 3000) {
-            result = [[ICMPPingResult alloc] init:0 ip:ip delay:avg];
+        PingResult *result;
+        if (avg > 0 && avg < 999) {
+            result = [[PingResult alloc] init:0 ip:ip delay:avg];
         }else {
-            result = [[ICMPPingResult alloc] init:-1 ip:ip delay:0];
+            result = [[PingResult alloc] init:-1 ip:ip delay:-1];
         }
         [pingResult addObject:result];
     }
@@ -370,14 +365,12 @@ static BOOL isValid(char *buffer, int len) {
     close(_sock);
 }
 
-- (void)start:(NSArray<NSString *> *)hosts
+- (void)startWith:(NSArray<NSString *> *)hosts
         count:(NSInteger)count
       timeout:(NSTimeInterval)timeout
-       output:(id<ICMPOutputDelegate>)output
-     complete:(ICMPPingCompleteHandler)complete
+     complete:(PingCompleteHandler)complete
 {
     _complete = complete;
-    _output = output;
     _count = count;
     _timeout = timeout;
     _hosts = hosts;
@@ -387,8 +380,7 @@ static BOOL isValid(char *buffer, int len) {
     dispatch_async(_recv_que, ^{
         @autoreleasepool {
             while (!self.stopped) {
-                int code = [self recv];
-                NSLog(@"result code: %@", @(code));
+                [self recv];
             }
         }
     });
@@ -413,7 +405,7 @@ static BOOL isValid(char *buffer, int len) {
     __block int count = 0;
     for (NSString *host in self.hosts) {
         NSDate *now = [NSDate date];
-        ICMPPingModel *model = [[ICMPPingModel alloc] initWithIP:host startDate:now];
+        PingModel *model = [[PingModel alloc] initWithIP:host startDate:now];
         NSMutableDictionary *result = [NSMutableDictionary dictionary];
         if (self.results[host]) {
             result = [NSMutableDictionary dictionaryWithDictionary:self.results[host]];
@@ -421,9 +413,8 @@ static BOOL isValid(char *buffer, int len) {
         NSString *key = [NSString stringWithFormat:@"%@", @(_currentCount)];
         result[key] = model;
         self.results[host] = result;
-        
-        int code = [self run:host];
-        NSLog(@"send code:%@", @(code));
+    
+        [self run:host];
         count++;
         if (count == self.hosts.count) {
             complete();
