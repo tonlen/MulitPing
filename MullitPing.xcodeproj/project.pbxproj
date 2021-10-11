@@ -7,15 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E281756F271437020096513B /* MullitPing.h in Headers */ = {isa = PBXBuildFile; fileRef = E281756E271437020096513B /* MullitPing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E28175772714370C0096513B /* ICMPMulitPing.m in Sources */ = {isa = PBXBuildFile; fileRef = E28175752714370C0096513B /* ICMPMulitPing.m */; };
+		E281757D27143C450096513B /* Source in Resources */ = {isa = PBXBuildFile; fileRef = E281757C27143C450096513B /* Source */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E281756B271437020096513B /* MullitPing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MullitPing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E281756E271437020096513B /* MullitPing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MullitPing.h; sourceTree = "<group>"; };
-		E28175752714370C0096513B /* ICMPMulitPing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICMPMulitPing.m; sourceTree = "<group>"; };
-		E28175762714370C0096513B /* ICMPMulitPing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICMPMulitPing.h; sourceTree = "<group>"; };
+		E281757C27143C450096513B /* Source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Source; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,7 +29,7 @@
 		E2817561271437020096513B = {
 			isa = PBXGroup;
 			children = (
-				E281756D271437020096513B /* MullitPing */,
+				E281757C27143C450096513B /* Source */,
 				E281756C271437020096513B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,16 +42,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E281756D271437020096513B /* MullitPing */ = {
-			isa = PBXGroup;
-			children = (
-				E281756E271437020096513B /* MullitPing.h */,
-				E28175762714370C0096513B /* ICMPMulitPing.h */,
-				E28175752714370C0096513B /* ICMPMulitPing.m */,
-			);
-			path = MullitPing;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -62,7 +49,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E281756F271437020096513B /* MullitPing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +111,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E281757D27143C450096513B /* Source in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,7 +122,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E28175772714370C0096513B /* ICMPMulitPing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
