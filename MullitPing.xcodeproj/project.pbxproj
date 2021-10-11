@@ -7,17 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E281758527143DE00096513B /* MullitPing.h in Headers */ = {isa = PBXBuildFile; fileRef = E281758427143DE00096513B /* MullitPing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E281758727143DE30096513B /* ICMPMulitPing.h in Headers */ = {isa = PBXBuildFile; fileRef = E281758627143DE30096513B /* ICMPMulitPing.h */; };
-		E281758A27143E440096513B /* ICMPMulitPing.m in Sources */ = {isa = PBXBuildFile; fileRef = E281758927143E440096513B /* ICMPMulitPing.m */; };
+		E281759727143F570096513B /* MullitPing.h in Headers */ = {isa = PBXBuildFile; fileRef = E281759627143F570096513B /* MullitPing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E281759A27143F5D0096513B /* ICMPMulitPing.m in Sources */ = {isa = PBXBuildFile; fileRef = E281759927143F5D0096513B /* ICMPMulitPing.m */; };
+		E281759B27143F9A0096513B /* ICMPMulitPing.h in Headers */ = {isa = PBXBuildFile; fileRef = E281759827143F5C0096513B /* ICMPMulitPing.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E281756B271437020096513B /* MullitPing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MullitPing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E281757C27143C450096513B /* Source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Source; sourceTree = "<group>"; };
-		E281758427143DE00096513B /* MullitPing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MullitPing.h; sourceTree = "<group>"; };
-		E281758627143DE30096513B /* ICMPMulitPing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICMPMulitPing.h; sourceTree = "<group>"; };
-		E281758927143E440096513B /* ICMPMulitPing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICMPMulitPing.m; sourceTree = "<group>"; };
+		E281759627143F570096513B /* MullitPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MullitPing.h; sourceTree = "<group>"; };
+		E281759827143F5C0096513B /* ICMPMulitPing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICMPMulitPing.h; sourceTree = "<group>"; };
+		E281759927143F5D0096513B /* ICMPMulitPing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICMPMulitPing.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,10 +33,7 @@
 		E2817561271437020096513B = {
 			isa = PBXGroup;
 			children = (
-				E281758927143E440096513B /* ICMPMulitPing.m */,
-				E281758627143DE30096513B /* ICMPMulitPing.h */,
-				E281758427143DE00096513B /* MullitPing.h */,
-				E281757C27143C450096513B /* Source */,
+				E281759527143F470096513B /* Sources */,
 				E281756C271437020096513B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +46,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E281759527143F470096513B /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E281759627143F570096513B /* MullitPing.h */,
+				E281759827143F5C0096513B /* ICMPMulitPing.h */,
+				E281759927143F5D0096513B /* ICMPMulitPing.m */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -57,8 +63,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E281758527143DE00096513B /* MullitPing.h in Headers */,
-				E281758727143DE30096513B /* ICMPMulitPing.h in Headers */,
+				E281759727143F570096513B /* MullitPing.h in Headers */,
+				E281759B27143F9A0096513B /* ICMPMulitPing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,7 +137,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E281758A27143E440096513B /* ICMPMulitPing.m in Sources */,
+				E281759A27143F5D0096513B /* ICMPMulitPing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

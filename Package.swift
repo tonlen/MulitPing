@@ -19,7 +19,7 @@ let package = Package(
         .target(
             name: "MulitPing",
             dependencies: [],
-            path: "Source"
+            path: "Sources"
         )
     ]
 )
